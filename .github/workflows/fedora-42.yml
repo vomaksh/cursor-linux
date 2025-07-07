@@ -1,0 +1,40 @@
+jobs:
+  build-fc42:
+    runs-on: ubuntu-latest
+    name: Build cursor rpm file for fedora 42
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v4
+
+      - name: Get current date
+        run: |
+          RESPONSE=$(curl -s 'https://cursor.com/api/download?platform=linux-x64&releaseTrack=stable')
+          CURSOR_VERSION=$(echo $RESPONSE | jq -r '.version')
+          echo "CURRENT_DATE=$(date --rfc-3339=date) $(date +%R)" >> ${GITHUB_ENV}
+          echo "TAG_NAME=$CURSOR_VERSION" >> ${GITHUB_ENV}
+
+      - name: Check if version already exists
+        id: release-exists
+        uses: insightsengineering/release-existence-action@v1.0.0
+        with:
+          release-tag: ${{ env.TAG_NAME }}
+
+      - name: Build docker image
+        if: ${{ steps.release-exists.outputs.release-exists == false }}
+        run: |
+          docker build -t cursor-fedora42:latest .
+
+      - name: Build cursor rpm
+        if: ${{ steps.release-exists.outputs.release-exists == false }}
+        run: |
+          docker run -it -v "$(pwd)/out:/root/rpmbuild/RPMS/x86_64" cursor-fedora42:latest
+
+      - uses: ncipollo/release-action@v1
+        if: ${{ steps.release-exists.outputs.release-exists == false }}
+        with:
+          name: ${{ env.CURRENT_DATE }}
+          tag: ${{ env.TAG_NAME }}
+          makeLatest: True
+          artifacts: "out/*.rpm"

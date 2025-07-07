@@ -1,7 +1,8 @@
-Name:           Cursor
-Version:        1.0
+Name:           cursor
+Version: 1.2.1
 Release:        1%{?dist}
 Summary:        The AI Code Editor
+License: 		Proprietary
 
 %define _build_id_links none
 %global debug_package %{nil}
