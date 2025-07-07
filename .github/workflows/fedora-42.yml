@@ -19,6 +19,7 @@ jobs:
           CURSOR_VERSION=$(echo $RESPONSE | jq -r '.version')
           echo "CURRENT_DATE=$(date --rfc-3339=date) $(date +%R)" >> ${GITHUB_ENV}
           echo "TAG_NAME=$CURSOR_VERSION" >> ${GITHUB_ENV}
+          echo "RELEASE_NAME=cursor-$CURSOR_VERSION" >> ${GITHUB_ENV}
 
       - name: Check if version already exists
         id: release-exists
@@ -39,7 +40,7 @@ jobs:
       - uses: ncipollo/release-action@v1
         # if: ${{ steps.release-exists.outputs.release-exists == false }}
         with:
-          name: ${{ env.CURRENT_DATE }}
+          name: ${{ env.RELEASE_NAME }}
           tag: ${{ env.TAG_NAME }}
           makeLatest: True
           artifacts: "out/*.rpm"
