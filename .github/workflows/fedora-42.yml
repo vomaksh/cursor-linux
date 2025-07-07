@@ -27,17 +27,17 @@ jobs:
           release-tag: ${{ env.TAG_NAME }}
 
       - name: Build docker image
-        if: ${{ steps.release-exists.outputs.release-exists == false }}
+        # if: ${{ steps.release-exists.outputs.release-exists == false }}
         run: |
           docker build -t cursor-fedora42:latest .
 
       - name: Build cursor rpm
-        if: ${{ steps.release-exists.outputs.release-exists == false }}
+        # if: ${{ steps.release-exists.outputs.release-exists == false }}
         run: |
           docker run -it -v "$(pwd)/out:/root/rpmbuild/RPMS/x86_64" cursor-fedora42:latest
 
       - uses: ncipollo/release-action@v1
-        if: ${{ steps.release-exists.outputs.release-exists == false }}
+        # if: ${{ steps.release-exists.outputs.release-exists == false }}
         with:
           name: ${{ env.CURRENT_DATE }}
           tag: ${{ env.TAG_NAME }}
