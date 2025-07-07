@@ -1,3 +1,8 @@
+on:
+  push:
+    branches:
+      - master
+
 jobs:
   build-fc42:
     runs-on: ubuntu-latest
