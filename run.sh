@@ -17,10 +17,13 @@ curl -o out/cursor.AppImage $CURSOR_DOWNLOAD_URL
 chmod +x out/cursor.AppImage
 ./out/cursor.AppImage --appimage-extract
 mv squashfs-root out/
+mv out/squashfs-root "out/cursor-$CURSOR_VERSION"
+
+# add support for wayland
+sed -i "/^Exec=/s/$/--ozone-platform-hint=auto" "out/cursor-$CURSOR_VERSION/cursor.desktop"
 
 # build source tar.gz
-mv out/squashfs-root "out/cursor-$CURSOR_VERSION"
-tar -cvzf "$HOME/rpmbuild/SOURCES/cursor-$CURSOR_VERSION.tar.gz" -C out cursor-$CURSOR_VERSION
+tar -czf "$HOME/rpmbuild/SOURCES/cursor-$CURSOR_VERSION.tar.gz" -C out cursor-$CURSOR_VERSION
 rm -rf out
 
 # build rpm package
@@ -28,4 +31,3 @@ cp cursor.spec $HOME/rpmbuild/SPECS
 cd $HOME/rpmbuild/SPECS
 rpmbuild -ba $HOME/rpmbuild/SPECS/cursor.spec
 
-ls -l $HOME/rpmbuild/RPMS

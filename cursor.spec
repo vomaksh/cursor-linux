@@ -22,17 +22,14 @@ The AI Code Editor
 %install
 mkdir -p %{buildroot}/opt/cursor
 cp -a * %{buildroot}/opt/cursor/
-
 mkdir -p %{buildroot}/usr/share/cursor
 mkdir -p %{buildroot}/usr/bin
 cp * -ar ./usr/share/cursor/* %{buildroot}/usr/share/cursor/
 cp -r %{buildroot}/usr/share/cursor/resources/linux/bin %{buildroot}/usr/share/cursor
 chmod 755 %{buildroot}/usr/share/cursor/bin/cursor
 ln -sf /usr/share/cursor/bin/cursor %{buildroot}/usr/bin/cursor
-
 install -Dm0644 %{buildroot}/opt/cursor/cursor.desktop %{buildroot}/usr/share/applications/cursor.desktop
 install -Dm0644 %{buildroot}/opt/cursor/co.anysphere.cursor.png %{buildroot}/usr/share/pixmaps/co.anysphere.cursor.png
-
 rm -rf %{buildroot}/opt/cursor
 
 %files
