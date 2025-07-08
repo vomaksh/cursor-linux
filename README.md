@@ -5,5 +5,5 @@ AppImages have a lot of issues with system integration.
 
 This repo helps to fix that issue by creating rpm builds from AppImage.
 
-Supported distros
+### Supported Linux distros
 - [x] Fedora 42
