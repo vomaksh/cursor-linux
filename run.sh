@@ -20,7 +20,7 @@ mv squashfs-root out/
 mv out/squashfs-root "out/cursor-$CURSOR_VERSION"
 
 # add support for wayland
-sed -i "/^Exec=/s/$/--ozone-platform-hint=auto" "out/cursor-$CURSOR_VERSION/cursor.desktop"
+sed -i "/^Exec=/s/$/ --ozone-platform-hint=auto/" "out/cursor-$CURSOR_VERSION/cursor.desktop"
 
 # build source tar.gz
 tar -czf "$HOME/rpmbuild/SOURCES/cursor-$CURSOR_VERSION.tar.gz" -C out cursor-$CURSOR_VERSION
