@@ -32,6 +32,8 @@ jobs:
           else
             echo "RELEASE_EXISTS=YES" >> "$GITHUB_OUTPUT"
           fi
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Build docker image
         if: ${{ steps.release-exists.outputs.RELEASE_EXISTS == 'NO' }}
