@@ -23,31 +23,31 @@ jobs:
           echo "RELEASE_NAME=cursor-$CURSOR_VERSION" >> ${GITHUB_ENV}
 
       - name: Check if version already exists
-        id: release-exists
+        id: release_exists
         run: |
           RELEASE_ID="${{ env.TAG_NAME }}"
           set +e
-          RELEASE_RESPONSE=$(gh release view $RELEASE_ID --jq .id --json id 2>&1)
+          RELEASE_RESPONSE=$(gh release view $RELEASE_ID --json tagName --jq .tagName 2>&1)
           if [ "$RELEASE_RESPONSE" = "$RELEASE_ID" ]; then
-            echo "RELEASE_EXISTS=YES" >> "$GITHUB_OUTPUT"
+            echo "RELEASE_EXISTS=YES" >> $GITHUB_OUTPUT
           else
-            echo "RELEASE_EXISTS=NO" >> "$GITHUB_OUTPUT"
+            echo "RELEASE_EXISTS=NO" >> $GITHUB_OUTPUT
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build docker image
-        if: ${{ steps.release-exists.outputs.RELEASE_EXISTS == 'NO' }}
+        if: ${{ steps.release_exists.outputs.RELEASE_EXISTS == 'NO' }}
         run: |
           docker build -t cursor-fedora42:latest .
 
       - name: Build cursor rpm
-        if: ${{ steps.release-exists.outputs.RELEASE_EXISTS == 'NO' }}
+        if: ${{ steps.release_exists.outputs.RELEASE_EXISTS == 'NO' }}
         run: |
           docker run -v "$(pwd)/out:/root/rpmbuild/RPMS/x86_64" cursor-fedora42:latest
 
       - uses: ncipollo/release-action@v1
-        if: ${{ steps.release-exists.outputs.RELEASE_EXISTS == 'NO' }}
+        if: ${{ steps.release_exists.outputs.RELEASE_EXISTS == 'NO' }}
         with:
           name: ${{ env.RELEASE_NAME }}
           tag: ${{ env.TAG_NAME }}
