@@ -23,22 +23,28 @@ jobs:
 
       - name: Check if version already exists
         id: release-exists
-        uses: insightsengineering/release-existence-action@v1.0.0
-        with:
-          release-tag: ${{ env.TAG_NAME }}
+        run: |
+          RELEASE_ID="${{ env.RELEASE_NAME }}"
+          RELEASE_RESPONSE=$(gh release view $RELEASE_ID)
+          if [ "$RELEASE_RESPONSE" = "release not found" ]; then
+            echo "Release $RELEASE_ID not found"
+            echo "RELEASE_EXISTS=NO" >> "$GITHUB_OUTPUT"
+          else
+            echo "RELEASE_EXISTS=YES" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Build docker image
-        # if: ${{ steps.release-exists.outputs.release-exists == false }}
+        if: ${{ steps.release-exists.outputs.RELEASE_EXISTS == "NO" }}
         run: |
           docker build -t cursor-fedora42:latest .
 
       - name: Build cursor rpm
-        # if: ${{ steps.release-exists.outputs.release-exists == false }}
+        if: ${{ steps.release-exists.outputs.RELEASE_EXISTS == "NO" }}
         run: |
           docker run -v "$(pwd)/out:/root/rpmbuild/RPMS/x86_64" cursor-fedora42:latest
 
       - uses: ncipollo/release-action@v1
-        # if: ${{ steps.release-exists.outputs.release-exists == false }}
+        if: ${{ steps.release-exists.outputs.RELEASE_EXISTS == "NO" }}
         with:
           name: ${{ env.RELEASE_NAME }}
           tag: ${{ env.TAG_NAME }}
