@@ -24,8 +24,8 @@ jobs:
       - name: Check if version already exists
         id: release-exists
         run: |
-          RELEASE_ID="${{ env.RELEASE_NAME }}"
-          RELEASE_RESPONSE=$(gh release view $RELEASE_ID 2>&1)
+          RELEASE_ID="${{ env.TAG_NAME }}"
+          RELEASE_RESPONSE=$(gh release view $RELEASE_ID --json id 2>&1)
           if [ "$RELEASE_RESPONSE" = "release not found" ]; then
             echo "Release $RELEASE_ID not found"
             echo "RELEASE_EXISTS=NO" >> "$GITHUB_OUTPUT"
