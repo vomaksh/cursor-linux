@@ -27,6 +27,7 @@ jobs:
         run: |
           RELEASE_ID="${{ env.TAG_NAME }}"
           RELEASE_RESPONSE=$(gh release view $RELEASE_ID --jq .id --json id 2> /dev/null)
+          echo $RELEASE_RESPONSE
           if [ "$RELEASE_RESPONSE" = "$RELEASE_ID" ]; then
             echo "RELEASE_EXISTS=YES" >> "$GITHUB_OUTPUT"
           else
