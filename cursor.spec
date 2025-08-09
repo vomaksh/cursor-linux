@@ -1,5 +1,5 @@
 Name:           cursor
-Version: 1.2.1
+Version: 1.4.3
 Release:        1%{?dist}
 Summary:        The AI Code Editor
 License: 		Proprietary
@@ -25,7 +25,7 @@ cp -a * %{buildroot}/opt/cursor/
 mkdir -p %{buildroot}/usr/share/cursor
 mkdir -p %{buildroot}/usr/bin
 cp * -ar ./usr/share/cursor/* %{buildroot}/usr/share/cursor/
-cp -r %{buildroot}/usr/share/cursor/resources/linux/bin %{buildroot}/usr/share/cursor
+# cp -r %{buildroot}/usr/share/cursor/resources/bin %{buildroot}/usr/share/cursor
 chmod 755 %{buildroot}/usr/share/cursor/bin/cursor
 ln -sf /usr/share/cursor/bin/cursor %{buildroot}/usr/bin/cursor
 install -Dm0644 %{buildroot}/opt/cursor/cursor.desktop %{buildroot}/usr/share/applications/cursor.desktop
