@@ -26,14 +26,13 @@ jobs:
         run: |
           RELEASE_ID="${{ env.TAG_NAME }}"
           RELEASE_RESPONSE=$(gh release view $RELEASE_ID --jq .id --json id 2>&1)
-          if [ "$RELEASE_RESPONSE" = "release not found" ]; then
-            echo "Release $RELEASE_ID not found"
-            echo "RELEASE_EXISTS=NO" >> "$GITHUB_OUTPUT"
-          else
+          if [ "$RELEASE_RESPONSE" = "$RELEASE_ID" ]; then
             echo "RELEASE_EXISTS=YES" >> "$GITHUB_OUTPUT"
+          else
+            echo "RELEASE_EXISTS=NO" >> "$GITHUB_OUTPUT"
           fi
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build docker image
         if: ${{ steps.release-exists.outputs.RELEASE_EXISTS == 'NO' }}
